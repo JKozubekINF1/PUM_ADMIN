@@ -23,6 +23,11 @@ export interface ActivityDto {
   distanceMeters: number;
   durationSeconds: number;
   startedAt: string;
+  endedAt?: string;
+  averageSpeedMs?: number;
+  maxSpeedMs?: number;
+  description?: string;
+  createdAt?: string;
 }
 
 export interface StatsDto {
