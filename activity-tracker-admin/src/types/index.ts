@@ -2,18 +2,23 @@ export interface UserDto {
   id: string;
   email: string;
   userName: string;
-  firstName: string;
-  lastName: string;
+  firstName?: string;
+  lastName?: string;
   avatarUrl?: string;
   activitiesCount: number;
+  phoneNumber?: string;
+  dateOfBirth?: string; 
+  gender?: string;
+  height?: number;
+  weight?: number;
 }
 
 export interface ActivityDto {
   id: string;
   userId: string;
-  userName: string; // To wyświetlimy w tabeli
+  userName: string;
   userAvatarUrl?: string;
-  title: string;
+  title?: string;
   activityType: string;
   distanceMeters: number;
   durationSeconds: number;
