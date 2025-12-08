@@ -11,25 +11,53 @@ export default function LoginPage() {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
+    // Czyścimy stary błąd przy nowej próbie
+    setError('');
+
     try {
       const res = await axiosClient.post('/auth/login', { email, password });
-      const { token } = res.data;
+      
+      const { token, mustChangePassword } = res.data;
 
+      localStorage.setItem('token', token);
+
+      if (mustChangePassword) {
+          navigate('/change-password');
+          return;
+      }
+      
       const decoded: any = jwtDecode(token);
-      // Pamiętaj: upewnij się, że claim roli pasuje do tego co zwraca Twój backend
-      // Czasem jest to "role", czasem ten długi URL schemas.microsoft...
+      // Pamiętaj o sprawdzeniu claima, czasem .NET zwraca długi URL, a czasem krótki "role"
       const role = decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] || decoded.role;
 
       if (role !== 'Admin') {
         setError('Brak uprawnień administratora.');
+        localStorage.removeItem('token');
         return;
       }
 
-      localStorage.setItem('token', token);
       navigate('/admin');
-    } catch (err) {
-        console.error(err);
-      setError('Błędne dane logowania lub błąd serwera.');
+    } catch (err: any) {
+       console.error(err);
+       
+       // --- TUTAJ JEST DODANA OBSŁUGA BŁĘDÓW ---
+       if (err.response) {
+           // Błąd 401 oznacza złe dane logowania
+           if (err.response.status === 401) {
+               setError('Nieprawidłowy email lub hasło.');
+           } 
+           // Inne błędy z backendu (np. 400 Bad Request, 500 Server Error)
+           else if (err.response.data && typeof err.response.data === 'string') {
+               setError(err.response.data);
+           } else {
+               setError('Wystąpił błąd serwera. Spróbuj ponownie później.');
+           }
+       } else if (err.request) {
+           // Backend nie odpowiada (np. wyłączony serwer)
+           setError('Brak połączenia z serwerem. Sprawdź, czy backend działa.');
+       } else {
+           setError('Wystąpił nieoczekiwany błąd aplikacji.');
+       }
     }
   };
 
@@ -49,10 +77,26 @@ export default function LoginPage() {
             Panel Administratora
         </Typography>
 
+        {/* Wyświetlanie błędu */}
         {error && <Alert severity="error" sx={{ mb: 2, width: '100%' }}>{error}</Alert>}
         
-        <TextField fullWidth label="Email" margin="normal" value={email} onChange={e => setEmail(e.target.value)} />
-        <TextField fullWidth label="Hasło" type="password" margin="normal" value={password} onChange={e => setPassword(e.target.value)} />
+        <TextField 
+            fullWidth 
+            label="Email" 
+            margin="normal" 
+            value={email} 
+            onChange={e => setEmail(e.target.value)}
+            error={!!error} // Podświetla pole na czerwono przy błędzie
+        />
+        <TextField 
+            fullWidth 
+            label="Hasło" 
+            type="password" 
+            margin="normal" 
+            value={password} 
+            onChange={e => setPassword(e.target.value)} 
+            error={!!error} // Podświetla pole na czerwono przy błędzie
+        />
         
         <Button fullWidth variant="contained" size="large" sx={{ mt: 3 }} onClick={handleLogin}>
             Zaloguj
