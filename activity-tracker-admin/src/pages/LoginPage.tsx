@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Box, Button, TextField, Typography, Paper, Alert } from '@mui/material';
+import { Box, Button, TextField, Typography, Paper, Alert, Link } from '@mui/material';
 import axiosClient from '../api/axiosClient';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
@@ -40,7 +40,7 @@ export default function LoginPage() {
     } catch (err: any) {
        console.error(err);
        
-       // --- TUTAJ JEST DODANA OBSŁUGA BŁĘDÓW ---
+       // --- OBSŁUGA BŁĘDÓW ---
        if (err.response) {
            // Błąd 401 oznacza złe dane logowania
            if (err.response.status === 401) {
@@ -97,6 +97,18 @@ export default function LoginPage() {
             onChange={e => setPassword(e.target.value)} 
             error={!!error} // Podświetla pole na czerwono przy błędzie
         />
+
+        {/* --- LINK DO RESETOWANIA HASŁA --- */}
+        <Box width="100%" display="flex" justifyContent="flex-end" sx={{ mt: 1 }}>
+            <Link 
+                component="button" 
+                variant="body2" 
+                onClick={() => navigate('/forgot-password')}
+                sx={{ textDecoration: 'none', fontWeight: 500 }}
+            >
+                Nie pamiętasz hasła?
+            </Link>
+        </Box>
         
         <Button fullWidth variant="contained" size="large" sx={{ mt: 3 }} onClick={handleLogin}>
             Zaloguj
