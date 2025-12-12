@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // ZMIANA: Używamy HTTP i portu 5123, skoro tam działa Twój Swagger
-const BASE_URL = 'http://localhost:5123/api'; 
+const BASE_URL = 'https://activitis.hostingasp.pl.hostingasp.pl/api/'; 
 
 const axiosClient = axios.create({
   baseURL: BASE_URL,
