@@ -1,13 +1,12 @@
 import { createTheme } from '@mui/material/styles';
 
-// Kolor pobrany z Twojego logo (cyjan)
 const activisBlue = '#00B4D8'; 
 
 export const theme = createTheme({
   palette: {
     primary: {
-      main: activisBlue, // Główny kolor przycisków i nagłówków
-      contrastText: '#fff', // Biały tekst na niebieskim tle
+      main: activisBlue,
+      contrastText: '#fff',
     },
     secondary: {
       main: '#edf2f4',
@@ -23,7 +22,7 @@ export const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: 8, // Zaokrąglone przyciski
+          borderRadius: 8,
           padding: '10px 20px',
         },
       },
@@ -31,8 +30,8 @@ export const theme = createTheme({
     MuiAppBar: {
       styleOverrides: {
         root: {
-          backgroundColor: '#fff', // Biały nagłówek w panelu
-          color: '#333', // Ciemny tekst w nagłówku
+          backgroundColor: '#fff',
+          color: '#333',
           boxShadow: '0px 2px 4px -1px rgba(0,0,0,0.1)',
         }
       }

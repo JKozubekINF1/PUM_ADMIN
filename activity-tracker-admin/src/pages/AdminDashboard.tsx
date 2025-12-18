@@ -16,7 +16,6 @@ export default function AdminDashboard() {
   const [activities, setActivities] = useState<ActivityDto[]>([]);
   const [stats, setStats] = useState<StatsDto | null>(null);
   
-  // Stany dla Modali szczegółów
   const [selectedActivity, setSelectedActivity] = useState<ActivityDto | null>(null);
   const [selectedUser, setSelectedUser] = useState<UserDto | null>(null);
 
@@ -44,7 +43,6 @@ export default function AdminDashboard() {
       navigate('/login');
   };
 
-  // --- LOGIKA USUWANIA ---
 
   const handleDeleteUser = async (userId: string, event: React.MouseEvent) => {
       event.stopPropagation(); 
@@ -72,7 +70,6 @@ export default function AdminDashboard() {
       }
   };
 
-  // --- FORMATOWANIE DANYCH ---
 
   const formatDuration = (seconds: number) => {
       const h = Math.floor(seconds / 3600);
@@ -87,7 +84,6 @@ export default function AdminDashboard() {
       return `${(ms * 3.6).toFixed(1)} km/h`;
   };
 
-  // --- DEFINICJE KOLUMN ---
 
   const userColumns: GridColDef[] = [
     { 
@@ -159,7 +155,6 @@ export default function AdminDashboard() {
   ];
 
   return (
-    // Layout na całą wysokość ekranu (bez scrolla body)
     <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column', bgcolor: '#f5f7fa', overflow: 'hidden' }}>
       
       <AppBar position="static" color="inherit" elevation={1}>
@@ -174,20 +169,17 @@ export default function AdminDashboard() {
 
       <Box sx={{ p: 2, maxWidth: 1400, margin: '0 auto', width: '100%', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
         
-        {/* Statystyki */}
         <Box display="flex" gap={2} mb={2} flexWrap="wrap" flexShrink={0}>
             <PaperStat title="Użytkownicy" value={stats?.totalUsers} />
             <PaperStat title="Aktywności" value={stats?.totalActivities} />
             <PaperStat title="Łączny Dystans (km)" value={stats?.totalDistanceKm} />
         </Box>
 
-        {/* Zakładki */}
         <Tabs value={tabIndex} onChange={(_, v) => setTabIndex(v)} sx={{ mb: 1, borderBottom: 1, borderColor: 'divider', minHeight: 40 }}>
             <Tab label="Wszystkie Aktywności" sx={{ minHeight: 40, py: 0 }} />
             <Tab label="Użytkownicy" sx={{ minHeight: 40, py: 0 }} />
         </Tabs>
 
-        {/* Kontener tabeli */}
         <Paper sx={{ 
             flex: 1, 
             width: '100%', 
@@ -227,7 +219,6 @@ export default function AdminDashboard() {
 
       </Box>
 
-      {/* --- MODAL 1: SZCZEGÓŁY AKTYWNOŚCI --- */}
       <Dialog open={!!selectedActivity} onClose={() => setSelectedActivity(null)} maxWidth="sm" fullWidth>
         <DialogTitle sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <Avatar src={selectedActivity?.userAvatarUrl} />
@@ -293,7 +284,6 @@ export default function AdminDashboard() {
         </DialogContent>
       </Dialog>
 
-      {/* --- MODAL 2: PEŁNY PROFIL UŻYTKOWNIKA --- */}
       <Dialog open={!!selectedUser} onClose={() => setSelectedUser(null)} maxWidth="sm" fullWidth>
         <DialogTitle sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <Avatar src={selectedUser?.avatarUrl} sx={{ width: 50, height: 50 }} />

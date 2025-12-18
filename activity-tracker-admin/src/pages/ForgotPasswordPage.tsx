@@ -4,10 +4,9 @@ import axiosClient from '../api/axiosClient';
 import { useNavigate } from 'react-router-dom';
 
 export default function ForgotPasswordPage() {
-  const [step, setStep] = useState<1 | 2>(1); // 1 = Podaj email, 2 = Podaj token i hasło
+  const [step, setStep] = useState<1 | 2>(1); 
   const [email, setEmail] = useState('');
   
-  // Pola do resetu (Krok 2)
   const [token, setToken] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
@@ -17,16 +16,13 @@ export default function ForgotPasswordPage() {
   
   const navigate = useNavigate();
 
-  // KROK 1: Wyślij prośbę o token
   const handleSendEmail = async () => {
     setMessage(null);
     setLoading(true);
     try {
-      // Backend zwraca 200 OK nawet jak maila nie ma (security), więc zawsze przechodzimy dalej
       await axiosClient.post('/auth/forgot-password', { email });
       
       setMessage({ type: 'success', text: 'Jeśli konto istnieje, wysłaliśmy kod resetujący na Twój email.' });
-      // Przełączamy na formularz wpisywania tokena
       setStep(2);
     } catch (err: any) {
         setMessage({ type: 'error', text: 'Wystąpił błąd połączenia z serwerem.' });
@@ -35,7 +31,6 @@ export default function ForgotPasswordPage() {
     }
   };
 
-  // KROK 2: Ustaw nowe hasło używając tokena
   const handleResetPassword = async () => {
     if (newPassword !== confirmNewPassword) {
         setMessage({ type: 'error', text: 'Hasła nie są identyczne.' });
@@ -53,12 +48,10 @@ export default function ForgotPasswordPage() {
         confirmNewPassword
       });
 
-      // Sukces
       alert("Hasło zostało zmienione pomyślnie! Możesz się zalogować.");
       navigate('/login');
 
     } catch (err: any) {
-        // Obsługa błędów z backendu (np. zły token)
         if (err.response && err.response.data) {
              const data = err.response.data;
              if (Array.isArray(data)) {
@@ -80,7 +73,6 @@ export default function ForgotPasswordPage() {
     <Box display="flex" justifyContent="center" alignItems="center" height="100vh" bgcolor="#f5f7fa">
       <Paper elevation={3} sx={{ p: 4, width: 400, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         
-        {/* LOGO */}
         <Box component="img" src="/logo.jpg" alt="Activis" sx={{ height: 50, mb: 2, borderRadius: 1 }} />
 
         <Typography variant="h5" mb={1} fontWeight="bold" color="textSecondary">
@@ -99,7 +91,6 @@ export default function ForgotPasswordPage() {
             </Alert>
         )}
 
-        {/* FORMULARZ KROK 1 */}
         {step === 1 && (
             <>
                 <TextField 
@@ -116,10 +107,8 @@ export default function ForgotPasswordPage() {
             </>
         )}
 
-        {/* FORMULARZ KROK 2 */}
         {step === 2 && (
             <>
-                {/* Email wyświetlamy jako disabled, żeby user wiedział dla kogo zmienia */}
                 <TextField fullWidth label="Email" value={email} disabled margin="dense" />
                 
                 <TextField 

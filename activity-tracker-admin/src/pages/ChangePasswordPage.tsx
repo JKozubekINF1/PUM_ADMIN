@@ -21,7 +21,6 @@ export default function ChangePasswordPage() {
         confirmNewPassword: confirmPassword 
       });
       
-      // Sukces - przekieruj do panelu
       navigate('/admin');
     } catch (err: any) {
       setError(err.response?.data?.message || 'Wystąpił błąd podczas zmiany hasła.');
